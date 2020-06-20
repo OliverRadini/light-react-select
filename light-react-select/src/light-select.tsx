@@ -6,7 +6,7 @@ interface IMenuOption {
 }
 
 interface ISelectClassNames {
-    wrapper1: string;
+    wrapper: string;
 }
 
 interface ISelectProps {
@@ -23,13 +23,30 @@ interface ISelectProps {
 
 type Predicate<T> = (x: T) => boolean;
 
-const complement = <T, U>(f: (x: T) => boolean) => (x: T) => !f(x);
+const complement = <T, U>(f: Predicate<T>) => (x: T) => !f(x);
+const PLACEHOLDER_LENGTH = 5;
+
+const formOptionsToPlaceholderText = (placeholder: string, maxLength: number) =>
+    (values: { label: string; value: string; }[]) => {
+        if (values.length === 0) {
+            return placeholder;
+        }
+
+        const joinedValues = values.map(x => x.label).join(', ');
+
+        if (joinedValues.length > maxLength) {
+            return `${joinedValues.substring(0, maxLength)}...`;
+        }
+
+        return joinedValues;
+    }
 
 const SelectProps: React.FunctionComponent<ISelectProps> = ({
     allOptionLabelDeselect,
     allOptionLabelSelect,
     allOptionValue,
     allowSelectAll,
+    classNames,
     onChange,
     options,
     placeholder,
@@ -40,7 +57,7 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
     const selectedValuesContains = (x: { label: string; value: string; }) => value
         .some(y => y.label === x.label && y.value === y.value);
 
-    const titleText = 'title text placeholder';
+    const titleText = formOptionsToPlaceholderText(placeholder || '', PLACEHOLDER_LENGTH)(value);
 
     const getOptionClicker = (option: IMenuOption) => () => {
         if (option.value === allOptionValue) {
@@ -53,7 +70,7 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
 
     const toggleIsOpen = () => setIsOpen(!isOpen);
 
-    return <div>
+    return <div className={classNames?.wrapper}>
         <button onClick={toggleIsOpen}>{titleText}</button>
         {isOpen
             ?
@@ -62,7 +79,9 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
                     {
                         allowSelectAll
                             ? (
-                                <button onClick={getOptionClicker({ label: allOptionLabelSelect, value: allOptionValue })}>{allOptionLabelSelect}</button>
+                                <button onClick={getOptionClicker({ label: allOptionLabelSelect, value: allOptionValue })}>
+                                    {value.length === options.length ? allOptionLabelDeselect : allOptionLabelSelect}
+                                </button>
                             )
                             : null
                     }
