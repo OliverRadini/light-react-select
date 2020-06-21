@@ -6,7 +6,11 @@ interface IMenuOption {
 }
 
 interface ISelectClassNames {
-    wrapper: string;
+    wrapper?: string;
+    placeholderButton?: string;
+    optionsSectionWrapper?: string;
+    optionsButton?: string;
+    optionCheckbox?: string;
 }
 
 interface ISelectProps {
@@ -57,7 +61,7 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
     const selectedValuesContains = (x: { label: string; value: string; }) => value
         .some(y => y.label === x.label && y.value === y.value);
 
-    const titleText = formOptionsToPlaceholderText(placeholder || '', PLACEHOLDER_LENGTH)(value);
+    const titleText = formOptionsToPlaceholderText(placeholder || 'Select', PLACEHOLDER_LENGTH)(value);
 
     const getOptionClicker = (option: IMenuOption) => () => {
         if (option.value === allOptionValue) {
@@ -71,7 +75,7 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
     const toggleIsOpen = () => setIsOpen(!isOpen);
 
     return <div className={classNames?.wrapper}>
-        <button onClick={toggleIsOpen}>{titleText}</button>
+        <button className={classNames?.placeholderButton} onClick={toggleIsOpen}>{titleText}</button>
         {isOpen
             ?
             (
@@ -79,7 +83,10 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
                     {
                         allowSelectAll
                             ? (
-                                <button onClick={getOptionClicker({ label: allOptionLabelSelect, value: allOptionValue })}>
+                                <button
+                                    onClick={getOptionClicker({ label: allOptionLabelSelect, value: allOptionValue })}
+                                    className={classNames?.optionsButton}
+                                >
                                     {value.length === options.length ? allOptionLabelDeselect : allOptionLabelSelect}
                                 </button>
                             )
@@ -87,7 +94,17 @@ const SelectProps: React.FunctionComponent<ISelectProps> = ({
                     }
                     {
                         options.map(o => (
-                            <button onClick={getOptionClicker(o)}><input type="checkbox" checked={selectedValuesContains(o)} />{o.label}</button>
+                            <button 
+                                onClick={getOptionClicker(o)}
+                                className={classNames?.optionsButton}
+                            >
+                                <input
+                                    className={classNames?.optionCheckbox} 
+                                    type="checkbox"
+                                    checked={selectedValuesContains(o)}
+                                />
+                                {o.label}
+                            </button>
                         ))
                     }
                 </div>

@@ -2,18 +2,21 @@
   "name": "light-react-select",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/light-select",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
+    "prepublish": "rm -rf ./dist && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "devDependencies": {
     "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.5"
   }
