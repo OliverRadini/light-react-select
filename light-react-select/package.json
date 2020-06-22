@@ -2,7 +2,7 @@
   "name": "light-react-select",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/light-select",
+  "main": "lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
     "prepublish": "rm -rf ./dist && npm run build",

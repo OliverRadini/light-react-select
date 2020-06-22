@@ -12,7 +12,8 @@
     "typeRoots": [
       "index.d.ts",
       "node_modules/@types"
-    ]
+    ],
+    "lib": ["DOM", "ES2015"]
   },
   "include": [
     "./src/**/*.tsx",
